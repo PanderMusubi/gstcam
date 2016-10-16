@@ -59,4 +59,4 @@ See source code for all comments with TODO. Try to get this application included
 License
 -------
 
-For this application the MIT License applies, see also the file [LICENSE].
+For this application the MIT License applies, see also the file [[LICENSE]].
