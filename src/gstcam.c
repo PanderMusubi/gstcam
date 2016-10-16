@@ -107,8 +107,7 @@ main (int   argc,
   //TODO Get screen width and height via Caps or CallBack?
       
   /* create full-screen scaling filter */
-  //TODO Only when -f option is given.
-      
+  //TODO Only when -f option is given. Perhaps two elements are needed, goals is to get  "videoscale ! video/x-raw,width=1024,height=768" with max width and max height of the sink 
   /* create source element */
   GstElement *source;
   source = gst_element_factory_make ("v4l2src", "source");
