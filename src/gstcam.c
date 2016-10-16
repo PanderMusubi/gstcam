@@ -5,7 +5,7 @@
 static GMainLoop *loop;
 
 //TODO Not used yet, perhaps not needed at all when width and height are retrieved in another way.
-static void
+/*static void
 read_video_props (GstCaps *caps)
 {
   gint width, height;
@@ -22,7 +22,7 @@ read_video_props (GstCaps *caps)
 
   g_print ("The video size of this set of capabilities is %dx%d\n",
 	   width, height);
-}
+}*/
 
 //TODO Callback which you are suppose to have. If really not needed, can be removed. Otherwise, should be an implementation which is as minimally as possible.
 static gboolean

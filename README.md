@@ -43,11 +43,15 @@ Building
 
 Prerequisites for building this application can be installed with:
 
-    sudo apt-get install gcc libgstreamer1.0-dev
+    sudo apt-get install gcc libgstreamer1.0-dev splint
 
 The application can be build by running:
 
     ./build.sh
+
+The source code can be checked with:
+
+    ./check.sh
 
 
 To do
