@@ -43,7 +43,7 @@ Building
 
 Prerequisites for building this application can be installed with:
 
-    sudo apt-get install gcc libgstreamer1.0-dev splint
+    sudo apt-get install gcc libgstreamer1.0-dev
 
 The application can be build by running:
 
@@ -52,6 +52,10 @@ The application can be build by running:
 The source code can be checked with:
 
     ./check.sh
+
+For checking, one has to have installed:
+
+    sudo apt-get isntall splint cppcheck
 
 
 To do
