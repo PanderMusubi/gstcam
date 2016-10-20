@@ -66,16 +66,17 @@ main (int   argc,
       char *argv[])
 {
   /* process command-line arguments */
-  gboolean silent = FALSE;
-  gchar *savefile = NULL;
+  gboolean autovideosink = FALSE;
+  gboolean fullscreen = FALSE;
+  gchar *device = NULL;
   GOptionContext *ctx;
   GError *err = NULL;
   GOptionEntry entries[] = {
-    { "autovideosink", 'a', 0, G_OPTION_ARG_NONE, &silent,
+    { "autovideosink", 'a', 0, G_OPTION_ARG_NONE, &autovideosink,
       "use auto video sink instead of GL Image sink", NULL },
-    { "fullscreen", 'f', 0, G_OPTION_ARG_NONE, &silent,
+    { "fullscreen", 'f', 0, G_OPTION_ARG_NONE, &fullscreen,
       "use sink in full screen mode", NULL },
-    { "device", 'd', 0, G_OPTION_ARG_STRING, &savefile,
+    { "device", 'd', 0, G_OPTION_ARG_STRING, &device,
       "use specified device as input, e.g. /dev/video1", "FILE" },
     { NULL }
   };
@@ -89,44 +90,73 @@ main (int   argc,
     return 1;
   }
 
-  //TODO How to retrieve the options and arguments?
-
   /* initialize gst */
   gst_init(0, NULL);
   
   /* create sink element */
   GstElement *sink;
-  sink = gst_element_factory_make ("glimagesink", "sink");//TODO Use autovideosink when indicated in -a option.
-  if (!sink) {
-    g_print ("Failed to create element of type 'autovideosink'\n");
-    g_option_context_free (ctx);
-    return -1;
+  sink = NULL;
+  if (autovideosink) {
+    /* use autovideosink option */
+    sink = gst_element_factory_make ("autovideosink", "sink");
+    if (!sink) {
+      g_error ("Failed to create element of type 'autovideosink'\n");
+      g_option_context_free (ctx);
+      return -1;
+    }
+  } else {
+    sink = gst_element_factory_make ("glimagesink", "sink");
+    if (!sink) {
+      g_error ("Failed to create element of type 'glimagesink'\n");
+      g_option_context_free (ctx);
+      return -1;
+    }
   }
   
-  /* get sink dimensions */
-  //TODO Get screen width and height via Caps or CallBack?
-      
-  /* create full-screen scaling filter */
-  //TODO Only when -f option is given. Perhaps two elements are needed, goals is to get  "videoscale ! video/x-raw,width=1024,height=768" with max width and max height of the sink 
   /* create source element */
   GstElement *source;
   source = gst_element_factory_make ("v4l2src", "source");
   if (!source) {
-    g_print ("Failed to create element of type 'v4l2src'\n");
+    g_error ("Failed to create element of type 'v4l2src'\n");
     gst_object_unref (GST_OBJECT (sink));
-    //TODO If filter was created, clean up too!
     g_option_context_free (ctx);
     return -1;
   }
-  //TODO Add device=/dev/video1 to the element when indicated in -d agument
+  /* use device argument for source */
+  if (device) {
+    g_object_set (G_OBJECT (source), "device", device, NULL);
+  }
   
   /* create pipeline */
   GstElement *pipeline;
   pipeline = gst_pipeline_new ("device-cam");
-  gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);//TODO Include filter when needed.
-  if (!gst_element_link_many (source, sink, NULL)) {//TODO Include filter when needed.
-    g_warning ("Failed to link elements!");
-    //TODO clean up, probably only pipeline and ctx
+  if (fullscreen) {
+    /* get sink dimensions */
+    //TODO Get screen width and height via Caps or CallBack?
+      
+    /* create full-screen scaling filter */
+    GstElement *videoscale;
+    GstElement *capsfilter;
+    videoscale = gst_element_factory_make ("videoscale", "videoscale");
+    capsfilter = gst_element_factory_make ("capsfilter", "capsfilter");
+    GstCaps *caps = gst_caps_from_string ("video/x-raw,width=1280,height=768");//TODO use screen width and height
+    g_object_set (G_OBJECT (capsfilter), "caps", caps, NULL);
+
+    gst_bin_add_many (GST_BIN (pipeline), source, videoscale, capsfilter, sink, NULL);
+    if (!gst_element_link_many (source, videoscale, capsfilter, sink, NULL)) {
+      g_error ("Failed to link elements");
+      gst_object_unref (GST_OBJECT (pipeline)); // unrefs also its elements
+      g_option_context_free (ctx);
+      return -1;
+    }
+  } else {
+    gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
+    if (!gst_element_link_many (source, sink, NULL)) {
+      g_error ("Failed to link elements");
+      gst_object_unref (GST_OBJECT (pipeline)); // unrefs also its elements
+      g_option_context_free (ctx);
+      return -1;
+    }
   }
   
   /* add watch to pipeline message bus */
@@ -145,7 +175,7 @@ main (int   argc,
   
   /* clean up */
   gst_element_set_state (pipeline, GST_STATE_NULL);
-  gst_object_unref (GST_OBJECT (pipeline)); // Unrefs elements too.
+  gst_object_unref (GST_OBJECT (pipeline)); // unrefs also its elements
   g_source_remove (bus_watch_id);
   g_main_loop_unref (loop);
   g_option_context_free (ctx);
