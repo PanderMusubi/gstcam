@@ -49,13 +49,15 @@ The application can be build by running:
 
     ./build.sh
 
+and the resulting binary can be found in the `bin` directory. Note that several builds are already available.
+
 The source code can be checked with:
 
     ./check.sh
 
 For checking, one has to have installed:
 
-    sudo apt-get isntall splint cppcheck
+    sudo apt-get install splint cppcheck
 
 
 To do
