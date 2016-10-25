@@ -22,6 +22,9 @@ camera that can be found by GStreamer.
 
 ![Component diagram](images/component-diagram.png?raw=true)
 
+Apart from that this application doesn't need a network or storage, it is also
+guaranteed that no network or storage will be used.
+
 
 Usage
 -----
