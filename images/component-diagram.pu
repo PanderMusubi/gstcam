@@ -4,11 +4,11 @@ title Component Diagram
 
 node gstcam {
     [Camera] as cam
-    [System] as sys
+    [Computer] as com
     [Screen] as scr
 }
 
-cam -r-> sys
-sys -r-> scr
+cam -r-> com: USB or\ninternal bus
+com -r-> scr: VGA, DVI, HDMI\nor DisplayPort
 
 @enduml
