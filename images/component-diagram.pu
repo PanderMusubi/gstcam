@@ -1,0 +1,14 @@
+@startuml
+
+title Component Diagram
+
+node gstcam {
+    [Camera] as cam
+    [System] as sys
+    [Screen] as scr
+}
+
+cam -r-> sys
+sys -r-> scr
+
+@enduml

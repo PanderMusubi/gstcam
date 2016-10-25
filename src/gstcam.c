@@ -108,6 +108,7 @@ main (int   argc,
     sink = gst_element_factory_make ("glimagesink", "sink");
     if (!sink) {
       g_error ("Failed to create element of type 'glimagesink'\n");
+      //TODO Use autovideosink as fallback, but notify
       g_option_context_free (ctx);
       return -1;
     }
