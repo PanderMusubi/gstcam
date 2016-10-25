@@ -28,7 +28,12 @@ Usage
 
 The application can be run with the command:
 
-    ./gstcam
+    ./bin/gstcam-MACHINE-DISTRIB-VERSION
+
+Where MACHINE, DISTRIB and VERSION need to be replaced with the name of the
+machine's (system's) architecture and the name and version of the distribution
+(operating system) installed. Simply see what is available in the `bin`
+directory or has been created by the script `build.sh` on your system.
 
 Only a few command-line options and arguments can be passed to this application
 in order to keep this application simple and fast.
