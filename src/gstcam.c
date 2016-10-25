@@ -105,12 +105,16 @@ main (int   argc,
       return -1;
     }
   } else {
+    /* use glimagesink as default */
     sink = gst_element_factory_make ("glimagesink", "sink");
     if (!sink) {
-      g_error ("Failed to create element of type 'glimagesink'\n");
-      //TODO Use autovideosink as fallback, but notify
-      g_option_context_free (ctx);
-      return -1;
+      /* try autovideosink as fallback*/
+      sink = gst_element_factory_make ("autovideosink", "sink");
+      if (!sink) {
+        g_error ("Failed to create element of type 'glimagesink' and fallback 'autovideosink' also failed\n");
+        g_option_context_free (ctx);
+        return -1;
+      }
     }
   }
   
