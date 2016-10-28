@@ -137,6 +137,7 @@ main (int   argc,
   if (device) {
     g_object_set (G_OBJECT (source), "device", device, NULL);
   }
+  //TODO also set resolution at source as default is max.
   
   /* create pipeline */
   GstElement *pipeline;
