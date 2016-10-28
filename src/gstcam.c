@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <string.h>
 #include <gst/gst.h>
 
 /* author Pander */
@@ -69,17 +71,21 @@ main (int   argc,
   gboolean autovideosink = FALSE;
   gboolean fullscreen = FALSE;
   gchar *device = NULL;
+  gchar *resolution = NULL;
   GOptionContext *ctx;
   GError *err = NULL;
   GOptionEntry entries[] = {
     { "autovideosink", 'a', 0, G_OPTION_ARG_NONE, &autovideosink,
       "use auto video sink instead of GL Image sink", NULL },
     { "fullscreen", 'f', 0, G_OPTION_ARG_NONE, &fullscreen,
-      "use sink in full screen mode", NULL },
+      "use sink in full screen mode, is overridden by --resolution", NULL },
     { "device", 'd', 0, G_OPTION_ARG_STRING, &device,
       "use specified device as input, e.g. /dev/video1", "FILE" },
+    { "resolution", 'r', 0, G_OPTION_ARG_STRING, &resolution,
+      "use specified resolution, e.g. 800x600 or 640x480", "WIDTHxHEIGHT" },
     { NULL }
   };
+  //TODO Add option with argument for  
   ctx = g_option_context_new ("Device camera live player");
   g_option_context_add_main_entries (ctx, entries, NULL);
   g_option_context_add_group (ctx, gst_init_get_option_group ());
@@ -134,8 +140,8 @@ main (int   argc,
   
   /* create pipeline */
   GstElement *pipeline;
-  pipeline = gst_pipeline_new ("device-cam");
-  if (fullscreen) {
+  pipeline = gst_pipeline_new ("gstcam");
+  if (fullscreen || resolution) {
     /* get sink dimensions */
     //TODO Get screen width and height via Caps or CallBack?
       
@@ -144,7 +150,28 @@ main (int   argc,
     GstElement *capsfilter;
     videoscale = gst_element_factory_make ("videoscale", "videoscale");
     capsfilter = gst_element_factory_make ("capsfilter", "capsfilter");
-    GstCaps *caps = gst_caps_from_string ("video/x-raw,width=1280,height=768");//TODO use screen width and height
+    //TODO make the following more robust, also for width of four or two chars
+    gchar width[5];
+    gchar height[5];
+    gchar scaling[34] = "video/x-raw,width=";
+    if (resolution) {
+      memcpy(width, resolution, 3);
+      width[3] = '\0';
+      memcpy(height, resolution+4, 3);
+      height[3] = '\0';
+      memcpy(scaling+18, width, 3);
+      memcpy(scaling+21, ",height=", 8);
+      memcpy(scaling+29, height, 3);
+    } else {
+      memcpy(width, "1280", 4);//TODO use screen width
+      width[4] = '\0';
+      memcpy(height, "768", 3);//TODO use screen height
+      height[3] = '\0';
+      memcpy(scaling+18, width, 4);
+      memcpy(scaling+22, ",height=", 8);
+      memcpy(scaling+30, height, 3);
+    }
+    GstCaps *caps = gst_caps_from_string (scaling);
     g_object_set (G_OBJECT (capsfilter), "caps", caps, NULL);
 
     gst_bin_add_many (GST_BIN (pipeline), source, videoscale, capsfilter, sink, NULL);

@@ -53,14 +53,19 @@ video sink.
 
 **-f, --fullscreen**
 
-In case the resolution from the camera ... option ...
+TODO USes the full resolution of the screen ... option ... Is overridden by
+--resolution.
 
-**-d, --device=DEVICE**
+**-d, --device=FILE**
 
 GStreamer will search for the first camera available, starting at `/dev/video0`.
 This can be the camera mounted in a laptop's lid. When it is preferred to use
 another camera that is attached to the system, the specific device can be given
 as an argument via this option.
+
+**-r, --resolution=WIDTHxHEIGTH**
+
+TODO Sets the resolution of the screen. The fullscreen option will be ignored.
 
 
 Building
