@@ -107,3 +107,10 @@ For this application the MIT License applies, see also the file
 [Stichting z25.org](http://z25.org).
 
 [![Logo z25](images/logo-z25.png?raw=true)](http://z25.org)
+
+
+See also
+--------
+
+See for alternative applications also [cheese](https://wiki.gnome.org/Apps/Cheese), [webcamoid](https://webcamoid.github.io) and [guvcview](http://guvcview.sourceforge.net) (GTK+ UVC Viewer).
+
