@@ -77,28 +77,35 @@ The following application provide alternatives to gstcam but might have more
 requirements or dependencies for installation.
 
 
-### 3.1 Libav
+### 3.1 GStreamer Launcher (gst-launch)
+
+[GStreamer](http://gstreamer.freedesktop.org) Launcher can be run with:
+
+    gst-launch-1.0 -q v4l2src ! glimagesink
+
+
+### 3.2 Libav
 
 [Libav](https://libav.org) can be run with:
 
     TODO
 
 
-### 3.2 FFmpeg
+### 3.3 FFmpeg
 
 [FFmpeg](https://ffmpeg.org) can be run with:
 
     TODO
 
 
-### 3.3 GTK+ UVC Viewer (guvcview)
+### 3.4 GTK+ UVC Viewer (guvcview)
 
 [GTK+ UVC Viewer](http://guvcview.sourceforge.net) (guvcview) can be run with:
 
     guvcview -d /dev/video0 -x 1280x768 -m max -g none
 
 
-### 3.4 Cheese
+### 3.5 Cheese
 
 [Cheese](https://wiki.gnome.org/Apps/Cheese) can be run with:
 
@@ -107,7 +114,7 @@ requirements or dependencies for installation.
 See https://bugzilla.gnome.org/show_bug.cgi?id=780849 for the -d option.
 
 
-### 3.5 Webcamoid
+### 3.6 Webcamoid
 
 [Webcamoid](https://webcamoid.github.io) can be run with:
 
@@ -116,21 +123,21 @@ See https://bugzilla.gnome.org/show_bug.cgi?id=780849 for the -d option.
 Note that this application does not yet have command line arguments.
 
 
-### 3.6 VLC media player
+### 3.7 VLC media player
 
 [VLC](https://videolan.org/vlc) can be run with:
 
     vlc TODO
 
 
-### 3.7 MPV
+### 3.8 MPV
 
 [MPV](https://mpv.io) can be run with:
 
     TODO
 
 
-### 3.8 Xine
+### 3.9 Xine
 
 [Xine](https://xine-project.org) can be run with:
 
