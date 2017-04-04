@@ -74,7 +74,8 @@ TODO Sets the resolution of the screen. The fullscreen option will be ignored.
 ## 3 Alternatives
 
 The following application provide alternatives to gstcam but might have more
-requirements or dependencies for installation.
+requirements or dependencies for installation. The directory test has scripts
+to start these alternatives.
 
 
 ### 3.1 GStreamer Launcher (gst-launch)
