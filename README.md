@@ -28,13 +28,18 @@ guaranteed that no network or storage will be used.
 
 The application can be run with the command:
 
+    ./run.sh
+
+It will, with the help of `label.sh`, run:
+
     ./bin/gstcam-MACHINE-DISTRIB-VERSION-gst-GSTREM
 
 Where MACHINE, DISTRIB, VERSION and GSTREAM need to be replaced with the name
 of the machine's (system's) architecture, the name and version of the
 distribution (operating system) and the version of GStreamer installed. Simply
-see what is available in the `bin` directory or has been created by the script
-`build.sh` on your system and choose the most likely to match your system.
+see what is available in the `bin` directory or has been created by `make` on
+your system. Choose the executable most likely to match your system if `run.sh`
+cannot find a matchting build.
 
 Examples of available binaries are:
 * `./bin/gstcam-x86_64-Ubuntu-16.10-gst-1.8.3`
@@ -96,46 +101,70 @@ to start these alternatives.
 
 [FFmpeg](https://ffmpeg.org) can be run with:
 
-    TODO
+    ffplay -fs -f video4linux2 -i /dev/video0
+
+or
+
+    ffplay -fs -f video4linux2 -i /dev/video0 -video_size 800x600
 
 
 ### 3.4 GTK+ UVC Viewer (guvcview)
 
 [GTK+ UVC Viewer](http://guvcview.sourceforge.net) (guvcview) can be run with:
 
-    guvcview -d /dev/video0 -x 1280x768 -m max -g none
+    guvcview -m full -g none
+
+or
+
+    guvcview -m full -g none -d /dev/video0
+
+or
+
+    guvcview -m full -g none -d /dev/video0 -x 1280x768
+
+or
+
+    guvcview -m full -g none -x 1280x768
 
 
 ### 3.5 Cheese
 
 [Cheese](https://wiki.gnome.org/Apps/Cheese) can be run with:
 
+    cheese -f
+
+or
+
     cheese -f -d /dev/video0
 
 See https://bugzilla.gnome.org/show_bug.cgi?id=780849 for the -d option.
 
 
-### 3.6 Webcamoid
-
-[Webcamoid](https://webcamoid.github.io) can be run with:
-
-    webcamoid
-
-Note that this application does not yet have command line arguments.
-
-
-### 3.7 VLC media player
+### 3.6 VLC media player
 
 [VLC](https://videolan.org/vlc) can be run with:
 
-    vlc TODO
+    cvlc --no-video-title-show --no-video-deco -f v4l2://
+
+or
+
+    cvlc --no-video-title-show --no-video-deco -f v4l2:///dev/video0
+
+see also `--preferred-resolution`.
 
 
-### 3.8 MPV
+### 3.7 MPV
 
 [MPV](https://mpv.io) can be run with:
 
-    TODO
+    mpv  --fullscreen av://v4l2:/dev/video0
+
+see also `expand`, `scale` and `dsize`.
+
+
+### 3.8 MPlayer
+
+TODO
 
 
 ### 3.9 Xine
@@ -145,15 +174,42 @@ Note that this application does not yet have command line arguments.
     TODO
 
 
-## 4 Building
+### 3.10 Webcamoid
+
+[Webcamoid](https://webcamoid.github.io) can be run with:
+
+    webcamoid
+
+Note that this application does not yet have command line arguments.
+
+
+### 3.11 xawtv
+
+[xawtv](https://www.kraxel.org/blog/linux/xawtv/) (unmaintained) can be run with:
+
+    xawtv -f
+
+or
+
+    xawtv -f -c /dev/video0
+
+
+## 4 Inspection
+
+The following commands can be used to list which cameras are available:
+
+    v4l2-ctl --list-devices
+
+
+## 5 Building
 
 Prerequisites for building this application can be installed with:
 
-    sudo apt-get install gcc libgstreamer1.0-dev gstreamer1.0-tools
+    sudo apt-get install make gcc libgstreamer1.0-dev gstreamer1.0-tools
 
 The application can be build by running:
 
-    ./build.sh
+    make
 
 and the resulting binary can be found in the `bin` directory. Note that several
 builds are already available.
@@ -167,14 +223,14 @@ For checking, one has to have installed:
     sudo apt-get install splint cppcheck
 
 
-## 5 To do
+## 6 To do
 
 See source code for all comments with TODO. Try to get this application
 included in some GStreamer DEB package to get it deployed on Ubuntu and Debian
 (and Raspbian).
 
 
-## 6 License
+## 7 License
 
 For this application the MIT License applies, see also the file
 [LICENSE](LICENSE). The author of this software is

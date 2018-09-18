@@ -12,7 +12,7 @@ all: release
 	gcc -g -Wall -Wextra -O0  ${GLIB_H} ${GST_H} -o bin/gstcam-debug src/gstcam.c ${GLIB_L} ${GST_L}
 
 release:
-	gcc -Wall -O2  -fno-omit-frame-pointer ${GLIB_H} ${GST_H} -o bin/gstcam-${LABEL} src/gstcam.c ${GLIB_L} ${GST_L}
+	gcc -Wall -O2 -fno-omit-frame-pointer ${GLIB_H} ${GST_H} -o bin/gstcam-${LABEL} src/gstcam.c ${GLIB_L} ${GST_L}
 
-#clean:
-#	rm -f bin/${LABEL}
+clean:
+	rm -f bin/gstcam-debug
