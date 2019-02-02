@@ -6,7 +6,8 @@
 
 static GMainLoop *loop;
 
-//TODO Not used yet, perhaps not needed at all when width and height are retrieved in another way.
+//TODO Not used yet, perhaps not needed at all when width and height are
+// retrieved in another way.
 /*static void
 read_video_props (GstCaps *caps)
 {
@@ -26,7 +27,9 @@ read_video_props (GstCaps *caps)
 	   width, height);
 }*/
 
-//TODO Callback which you are suppose to have. If really not needed, can be removed. Otherwise, should be an implementation which is as minimally as possible.
+//TODO Callback which you are suppose to have. If really not needed, can be
+// removed. Otherwise, should be an implementation which is as minimally as
+// possible.
 static gboolean
 my_bus_callback (GstBus     *bus,
 		 GstMessage *message,
@@ -117,7 +120,8 @@ main (int   argc,
       /* try autovideosink as fallback*/
       sink = gst_element_factory_make ("autovideosink", "sink");
       if (!sink) {
-        g_error ("Failed to create element of type 'glimagesink' and fallback 'autovideosink' also failed\n");
+        g_error ("Failed to create element of type 'glimagesink' and "
+                 "fallback 'autovideosink' also failed\n");
         g_option_context_free (ctx);
         return -1;
       }
@@ -125,9 +129,9 @@ main (int   argc,
   }
   
   /* create source element */
-  GstElement *source;
-  source = gst_element_factory_make ("v4l2src", "source");
-  if (!source) {
+  GstElement *src;
+  src = gst_element_factory_make ("v4l2src", "source");
+  if (!src) {
     g_error ("Failed to create element of type 'v4l2src'\n");
     gst_object_unref (GST_OBJECT (sink));
     g_option_context_free (ctx);
@@ -135,7 +139,7 @@ main (int   argc,
   }
   /* use device argument for source */
   if (device) {
-    g_object_set (G_OBJECT (source), "device", device, NULL);
+    g_object_set (G_OBJECT (src), "device", device, NULL);
   }
   //TODO also set resolution at source as default is max.
   
@@ -147,10 +151,10 @@ main (int   argc,
     //TODO Get screen width and height via Caps or CallBack?
       
     /* create full-screen scaling filter */
-    GstElement *videoscale;
-    GstElement *capsfilter;
-    videoscale = gst_element_factory_make ("videoscale", "videoscale");
-    capsfilter = gst_element_factory_make ("capsfilter", "capsfilter");
+    GstElement *vscale;
+    GstElement *cfilter;
+    vscale = gst_element_factory_make ("videoscale", "videoscale");
+    cfilter = gst_element_factory_make ("capsfilter", "capsfilter");
     //TODO make the following more robust, also for width of four or two chars
     gchar width[5];
     gchar height[5];
@@ -173,18 +177,18 @@ main (int   argc,
       memcpy(scaling+30, height, 3);
     }
     GstCaps *caps = gst_caps_from_string (scaling);
-    g_object_set (G_OBJECT (capsfilter), "caps", caps, NULL);
+    g_object_set (G_OBJECT (cfilter), "caps", caps, NULL);
 
-    gst_bin_add_many (GST_BIN (pipeline), source, videoscale, capsfilter, sink, NULL);
-    if (!gst_element_link_many (source, videoscale, capsfilter, sink, NULL)) {
+    gst_bin_add_many (GST_BIN (pipeline), src, vscale, cfilter, sink, NULL);
+    if (!gst_element_link_many (src, vscale, cfilter, sink, NULL)) {
       g_error ("Failed to link elements");
       gst_object_unref (GST_OBJECT (pipeline)); // unrefs also its elements
       g_option_context_free (ctx);
       return -1;
     }
   } else {
-    gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
-    if (!gst_element_link_many (source, sink, NULL)) {
+    gst_bin_add_many (GST_BIN (pipeline), src, sink, NULL);
+    if (!gst_element_link_many (src, sink, NULL)) {
       g_error ("Failed to link elements");
       gst_object_unref (GST_OBJECT (pipeline)); // unrefs also its elements
       g_option_context_free (ctx);
