@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.7)
+project(gstcam VERSION 1.0.0)
+set(PROJECT_HOMEPAGE_URL "https://github.com/z25/gstcam")
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GSTREAMER REQUIRED gstreamer-1.0)
+add_subdirectory(src)
