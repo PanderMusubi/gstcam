@@ -194,6 +194,13 @@ or
     xawtv -f -c /dev/video0
 
 
+### 3.12 raspivid
+
+[raspibid](https://www.raspberrypi.org/documentation/usage/camera/raspicam/raspivid.md) can be run with:
+
+    raspivid -t 0 -rot 180
+
+
 ## 4 Inspection
 
 The following commands can be used to list which cameras are available:
